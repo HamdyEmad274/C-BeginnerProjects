@@ -10,6 +10,7 @@
         private Random random;
         public int Hp { get { return currentHealth; } }
         public string UnitName { get { return unitName; } }
+        public bool IsDead { get{return currentHealth <= 0;} }
 
         public Unit( int maxHealth, int attackPower, int healPower, string name )
         {
@@ -21,10 +22,6 @@
             this.random = new Random();
             
         }
-        private void TakeDamage(int rndDamage)
-        {
-            currentHealth -= rndDamage;
-        }
 
         public void Attack(Unit target)
         {
@@ -33,6 +30,23 @@
             int rndDamage = (int)(attackPower * rnd);
             target.TakeDamage(rndDamage);
             Console.WriteLine($"{unitName} attacked {target.unitName} for {rndDamage} damage");
+        }
+        private void TakeDamage(int rndDamage)
+        {
+            currentHealth -= rndDamage;
+            if (IsDead)
+            {
+                Console.WriteLine($"{unitName} has died");
+            }
+        }
+
+        public void Heal()
+        {
+            double rnd = random.NextDouble();
+            rnd = rnd / 2 + 0.75f;
+            int rndHeal = (int)(healPower * rnd);
+            currentHealth = Math.Min(currentHealth + rndHeal, maxHealth);
+            Console.WriteLine($"{unitName} healed for {rndHeal} health");
         }
 
     }
